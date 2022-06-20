@@ -15,9 +15,14 @@ async function main() {
 
   // We get the contract to deploy
   const triviaFactoryContract = await hre.ethers.getContractFactory("TriviaContract")
-  const triviaContract = await triviaFactoryContract.deploy()
+  const triviaContract = triviaFactoryContract.attach(`${process.env.DEPLOYED}`)
 
-  await triviaContract.deployed()
+  try {
+    let tx = await triviaContract.users(0xDC3c791Dd77122aE2E812f1aBA1e35e600d91F44)
+    return console.log(tx)
+  } catch (err) {
+    return console.log(err.message)
+  }
 
   console.log("Trivia Contract is deployed to:", triviaContract.address)
 }

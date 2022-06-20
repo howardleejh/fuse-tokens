@@ -30,10 +30,11 @@ module.exports = {
     }
   },
   networks: {
-    rinkeby: {
-      url: process.env.RINKEBY_URL || "",
+    mumbai: {
+      url: process.env.MUMBAI_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      gasMultiplier: 1.5,
     },
   },
   gasReporter: {
