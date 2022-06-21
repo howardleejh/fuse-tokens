@@ -4,6 +4,7 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat")
+const fs = require('fs')
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -14,12 +15,17 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const triviaFactoryContract = await hre.ethers.getContractFactory("TriviaContract")
-  const triviaContract = await triviaFactoryContract.deploy()
+  const TokenDistributionFactoryContract = await hre.ethers.getContractFactory("TokenDistributionContract")
+  const TokenDistributionContract = await TokenDistributionFactoryContract.deploy()
 
-  await triviaContract.deployed()
+  await TokenDistributionContract.deployed()
 
-  console.log("Trivia Contract is deployed to:", triviaContract.address)
+  console.log("Token Distribution Contract is deployed to:", TokenDistributionContract.address)
+
+  fs.appendFileSync('.env', `TOKENDISTRIBUTIONCONTRACT=${TokenDistributionContract.address}`, function (err) {
+    if (err) throw err
+    console.log('Updated')
+  })
 }
 
 // We recommend this pattern to be able to use async/await everywhere
