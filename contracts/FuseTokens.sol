@@ -9,10 +9,10 @@ pragma solidity 0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DumbTokens is ERC20, Ownable {
+contract FuseTokens is ERC20, Ownable {
     uint256 initialSupply = 1_000_000_000 ether;
 
-    constructor(address _address) ERC20("DUMB Tokens", "DUMB") {
+    constructor(address _address) ERC20("Fuse Tokens", "FUSE") {
         _mint(_address, initialSupply);
     }
 

@@ -2,11 +2,11 @@
 
 pragma solidity 0.8.9;
 
-/// @title Token Distribution Contract to allow users to mint DUMB Tokens
+/// @title Token Distribution Contract to allow users to mint FUSE Tokens
 /// @author Howard Lee
-/// @notice Contract is used to allow users to mint DUMB Tokens and record user reward info.
+/// @notice Contract is used to allow users to mint FUSE Tokens and record user reward info.
 
-import "./DumbTokens.sol";
+import "./FuseTokens.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
@@ -19,7 +19,7 @@ contract TokenDistributionContract is Ownable, ReentrancyGuard {
         uint256 rewardWithdrawn;
     }
 
-    DumbTokens public immutable tokens;
+    FuseTokens public immutable tokens;
     mapping(address => userInfo) public users;
     /// @dev this is the period of 1 day, users allowed to mint tokens once per day only.
     uint256 constant period = 86400;
@@ -37,13 +37,13 @@ contract TokenDistributionContract is Ownable, ReentrancyGuard {
     event supplyCreated(uint256 indexed _timestamp, uint256 _amount);
     event supplyBurned(uint256 indexed _timestamp, uint256 _amount);
 
-    /// @dev init DUMB tokens and mint total supply of tokens to this contract
+    /// @dev init FUSE tokens and mint total supply of tokens to this contract
     constructor() {
-        tokens = new DumbTokens(address(this));
+        tokens = new FuseTokens(address(this));
     }
 
     /// @dev user mint tokens function
-    function userMint() external nonReentrant returns (uint256) {
+    function userMint() external nonReentrant {
         require(
             users[msg.sender].nextMint == 0 ||
                 users[msg.sender].nextMint < block.timestamp,
@@ -51,10 +51,9 @@ contract TokenDistributionContract is Ownable, ReentrancyGuard {
         );
         users[msg.sender].nextMint = block.timestamp + period;
 
-        /// @dev users get random token mint ranging from 1 ~ 10 DUMB Tokens
+        /// @dev users get random token mint ranging from 1 ~ 10 FUSE Tokens
         uint256 randomReward = _randomNum(msg.sender);
         _rewardUser(msg.sender, randomReward);
-        return randomReward;
     }
 
     /// @dev allow users to withdraw rewards
@@ -84,9 +83,8 @@ contract TokenDistributionContract is Ownable, ReentrancyGuard {
             users[msg.sender].nextMint < block.timestamp
         ) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     function getTotalSupply() external view returns (uint256) {
